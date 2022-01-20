@@ -52,11 +52,11 @@ namespace KSHairsBaldHelmetsFixer
                     idFilters.Add(String.Join(",", filter));
                 }
                 return idFilters;
-            } 
+            }
             set
             {
                 _blacklist = ParseIdFilters(value);
-            } 
+            }
         }
     }
 
@@ -76,12 +76,13 @@ namespace KSHairsBaldHelmetsFixer
 
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
-            string[] blacklist = string.Join(",", Settings.Blacklist).Split(",");
+            string[] blacklist = { };// "kha", "arg" };
+            blacklist = blacklist.Concat(string.Join(",", Settings.Blacklist).Split(",")).ToArray();
             foreach (var armorAddonGetter in state.LoadOrder.PriorityOrder.ArmorAddon().WinningContextOverrides())
             {
                 var armorAddon = armorAddonGetter.Record;
-                if (armorAddon.BodyTemplate == null || 
-                    !armorAddon.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.LongHair) || 
+                if (armorAddon.BodyTemplate == null ||
+                    !armorAddon.BodyTemplate.FirstPersonFlags.HasFlag(BipedObjectFlag.LongHair) ||
                     armorAddon.EditorID == null || blacklist.Any(armorAddon.EditorID.ContainsInsensitive))
                 {
                     continue;
